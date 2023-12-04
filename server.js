@@ -1,8 +1,11 @@
 const express = require("express")
 const bodyParser = require("body-parser")
+const cros = require('cors')
 const app = express();
+app.use(cros())
 const mongoose = require("mongoose")
 const dbConfig= require('./config/database.config.js')
+
 
 mongoose.connect(dbConfig.url).then(()=>{
     console.log("Successfully connected to database")
