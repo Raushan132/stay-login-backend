@@ -6,6 +6,7 @@ const salt = 10;
 
 exports.save = async (req,res)=>{
 
+  //validate any field is empty
 if(!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.password){
      return res.status(400).send({
         message:"All Field are required"
@@ -13,7 +14,7 @@ if(!req.body.firstName || !req.body.lastName || !req.body.email || !req.body.pas
 }
 
 const emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
-
+//validate the email
 if(!req.body.email.match(emailFormat)) return res.status(400).send({
   message:"Email is not valid"
 });
@@ -28,6 +29,7 @@ if(!req.body.email.match(emailFormat)) return res.status(400).send({
 
      })
 
+    //validate user is existed or not
    const isEmailExit = await User.findOne({email:user.email})
    if(isEmailExit){
    return res.status(409).send({
@@ -55,16 +57,19 @@ exports.login = async(req, res)=>{
 }
 const emailFormat = /^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/;
 
+//validate the email
 if(!req.body.email.match(emailFormat)) return res.status(400).send({
   message:"Email is not valid"
 });
 
 const user = await User.findOne({email:req.body.email})
+//if user not found then
  if(!user) return res.status(401).send({
   message:'user not found'
  })
-   
+
  const identified= await bcrypt.compare(req.body.password,user.password)
+ //if password missmatch
  if(!identified) return res.status(401).send({
   message:'Invalid email and password'
  })
